@@ -14,6 +14,9 @@
             --border-color: #e0e0e0;
             --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             --hover-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            --minecraft-green: #00FF00;
+            --minecraft-dark: #3B3B3B;
+            --minecraft-darker: #2D2D2D;
         }
         
         * {
@@ -24,16 +27,19 @@
         }
         
         body {
-            background-color: #f5f5f5;
-            color: #333;
+            background-color: #1E1E1E;
+            color: #FFFFFF;
             line-height: 1.6;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="%23232323" width="100" height="100"/><path fill="%232a2a2a" d="M0 0h50v50H0z"/></svg>');
+            background-size: 30px 30px;
         }
         
         header {
-            background: linear-gradient(135deg, var(--primary-color), var(--dark-color));
-            color: white;
+            background: linear-gradient(135deg, var(--minecraft-darker), var(--minecraft-dark));
+            color: var(--minecraft-green);
             padding: 1.5rem 0;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            border-bottom: 3px solid var(--minecraft-green);
         }
         
         .container {
@@ -56,11 +62,13 @@
         
         .logo i {
             font-size: 2.5rem;
+            color: var(--minecraft-green);
         }
         
         .logo h1 {
             font-size: 1.8rem;
             font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
         
         .search-box {
@@ -72,16 +80,18 @@
             width: 100%;
             padding: 12px 20px;
             padding-left: 45px;
-            border: 2px solid var(--border-color);
-            border-radius: 30px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 2px solid var(--minecraft-green);
+            border-radius: 5px;
             font-size: 1rem;
             transition: all 0.3s;
+            color: white;
         }
         
         .search-box input:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+            box-shadow: 0 0 0 3px rgba(0, 255, 0, 0.2);
         }
         
         .search-box i {
@@ -89,7 +99,7 @@
             left: 15px;
             top: 50%;
             transform: translateY(-50%);
-            color: #999;
+            color: var(--minecraft-green);
         }
         
         .categories {
@@ -101,17 +111,18 @@
         
         .category-btn {
             padding: 8px 16px;
-            background-color: white;
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--minecraft-green);
+            border-radius: 5px;
             cursor: pointer;
             transition: all 0.2s;
+            color: white;
         }
         
         .category-btn:hover, .category-btn.active {
-            background-color: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
+            background-color: var(--minecraft-green);
+            color: black;
+            border-color: var(--minecraft-green);
         }
         
         .main-content {
@@ -122,11 +133,12 @@
         }
         
         .card {
-            background-color: white;
-            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(45, 45, 45, 0.9), rgba(35, 35, 35, 0.9));
+            border-radius: 5px;
             overflow: hidden;
             box-shadow: var(--card-shadow);
             transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid var(--minecraft-green);
         }
         
         .card:hover {
@@ -135,12 +147,13 @@
         }
         
         .card-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
+            background: linear-gradient(135deg, var(--minecraft-dark), var(--minecraft-darker));
+            color: var(--minecraft-green);
             padding: 15px;
             display: flex;
             align-items: center;
             gap: 10px;
+            border-bottom: 1px solid var(--minecraft-green);
         }
         
         .card-header i {
@@ -152,21 +165,21 @@
         }
         
         .card-body p {
-            color: #666;
+            color: #CCCCCC;
             margin-top: 10px;
             font-size: 0.9rem;
         }
         
         .card-footer {
             padding: 10px 15px;
-            background-color: #f9f9f9;
-            border-top: 1px solid var(--border-color);
+            background-color: rgba(0, 0, 0, 0.5);
+            border-top: 1px solid var(--minecraft-green);
             display: flex;
             justify-content: space-between;
         }
         
         .visit-btn {
-            color: var(--primary-color);
+            color: var(--minecraft-green);
             text-decoration: none;
             font-weight: 500;
             display: flex;
@@ -179,35 +192,39 @@
         }
         
         .submit-section {
-            background-color: white;
+            background: linear-gradient(135deg, rgba(45, 45, 45, 0.9), rgba(35, 35, 35, 0.9));
             padding: 30px;
-            border-radius: 10px;
+            border-radius: 5px;
             box-shadow: var(--card-shadow);
             margin: 40px 0;
             text-align: center;
+            border: 1px solid var(--minecraft-green);
         }
         
         .submit-btn {
             display: inline-block;
             margin-top: 20px;
             padding: 12px 25px;
-            background-color: var(--primary-color);
-            color: white;
+            background-color: var(--minecraft-green);
+            color: black;
             text-decoration: none;
             border-radius: 5px;
             font-weight: 500;
             transition: background-color 0.3s;
+            border: none;
+            cursor: pointer;
         }
         
         .submit-btn:hover {
-            background-color: var(--dark-color);
+            background-color: #00CC00;
         }
         
         footer {
-            background-color: #333;
+            background-color: var(--minecraft-darker);
             color: white;
             padding: 30px 0;
             margin-top: 50px;
+            border-top: 3px solid var(--minecraft-green);
         }
         
         .footer-content {
@@ -223,15 +240,16 @@
         }
         
         .instructions {
-            background-color: white;
+            background: linear-gradient(135deg, rgba(45, 45, 45, 0.9), rgba(35, 35, 35, 0.9));
             padding: 30px;
-            border-radius: 10px;
+            border-radius: 5px;
             box-shadow: var(--card-shadow);
             margin: 40px 0;
+            border: 1px solid var(--minecraft-green);
         }
         
         .instructions h2 {
-            color: var(--dark-color);
+            color: var(--minecraft-green);
             margin-bottom: 20px;
         }
         
@@ -241,13 +259,35 @@
         
         .instructions li {
             margin-bottom: 15px;
+            color: #CCCCCC;
         }
         
         .instructions code {
-            background-color: #f5f5f5;
+            background-color: rgba(0, 0, 0, 0.5);
             padding: 2px 5px;
             border-radius: 3px;
             font-family: monospace;
+            color: var(--minecraft-green);
+            border: 1px solid var(--minecraft-green);
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background-color: var(--minecraft-dark);
+            color: white;
+            border-radius: 5px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            border-left: 4px solid var(--minecraft-green);
+            transform: translateX(100%);
+            transition: transform 0.3s ease-out;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
         }
         
         @media (max-width: 768px) {
@@ -313,19 +353,20 @@
                     <code>
                         网站URL<br>
                         图标类型（FA/UP）<br>
+                        图标名称或URL<br>
                         网站名称<br>
                         简短描述<br>
                         分类（插件/教程/工具/资源/社区）
                     </code>
                 </li>
-                <li>提交issue，管理员审核后会添加到导航站</li>
+                <li>提交issue，GitHub Actions会自动处理并添加到导航站</li>
             </ol>
         </div>
         
         <div class="submit-section">
             <h2>提交新的Minecraft服务器资源</h2>
-            <p>通过GitHub Issues提交您想添加的网站，审核通过后将添加到导航</p>
-            <a href="https://github.com/your-username/your-repo/issues" class="submit-btn" target="_blank" id="issuesLink">
+            <p>通过GitHub Issues提交您想添加的网站，GitHub Actions会自动处理</p>
+            <a href="#" class="submit-btn" target="_blank" id="issuesLink">
                 <i class="fab fa-github"></i> 通过Issue提交
             </a>
         </div>
@@ -339,11 +380,16 @@
                 </div>
                 <div class="github-info">
                     <i class="fab fa-github"></i>
-                    <p>使用GitHub Issues提交和构建</p>
+                    <p>使用GitHub Issues提交和GitHub Actions自动构建</p>
                 </div>
             </div>
         </div>
     </footer>
+
+    <div class="notification" id="notification">
+        <i class="fas fa-info-circle"></i>
+        <span id="notificationText"></span>
+    </div>
 
     <script>
         // 示例数据 - 实际应用中这些数据将从GitHub Issues或JSON文件加载
@@ -432,15 +478,40 @@
             });
         }
 
+        // 显示通知
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            notificationText.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
         // 初始化渲染
         document.addEventListener('DOMContentLoaded', () => {
             // 设置GitHub Issues链接
             const repoUrl = window.location.href.includes('github.io') 
                 ? window.location.origin + window.location.pathname 
                 : 'https://github.com/your-username/your-repo';
-            document.getElementById('issuesLink').href = repoUrl + '/issues';
+            document.getElementById('issuesLink').href = repoUrl + '/issues/new/choose';
             
-            renderWebsites(websites);
+            // 从localStorage加载数据或使用示例数据
+            let storedWebsites = localStorage.getItem('minehelp_websites');
+            if (storedWebsites) {
+                try {
+                    const websitesData = JSON.parse(storedWebsites);
+                    renderWebsites(websitesData);
+                } catch (e) {
+                    console.error('Error parsing stored websites:', e);
+                    renderWebsites(websites);
+                }
+            } else {
+                renderWebsites(websites);
+            }
             
             // 搜索功能
             const searchInput = document.getElementById('searchInput');
@@ -480,7 +551,15 @@
                     renderWebsites(filteredWebsites);
                 });
             });
+            
+            // 模拟GitHub Actions处理完成的通知
+            setTimeout(() => {
+                if (window.location.hash === '#action-complete') {
+                    showNotification('GitHub Actions已成功处理您的提交！');
+                    window.location.hash = '';
+                }
+            }, 1000);
         });
     </script>
 </body>
-  </html>
+</html>

@@ -21,80 +21,100 @@ jobs:
     - name: Parse issue and update data
       run: |
         # 安装依赖
-        pip install requests
+        pip install pyyaml
         
         # 创建处理脚本
         cat > process_issue.py << 'EOF'
         import json
         import os
+        import yaml
         import re
         
         # 从环境变量获取Issue内容
         issue_body = os.environ['ISSUE_BODY']
-        issue_number = os.environ['ISSUE_NUMBER']
         
-        # 解析Issue内容
-        lines = [line.strip() for line in issue_body.split('\n') if line.strip()]
-        
-        # 提取信息
-        url = lines[0] if len(lines) > 0 else ""
-        icon_type = lines[1] if len(lines) > 1 else ""
-        icon_value = lines[2] if len(lines) > 2 else ""
-        name = lines[3] if len(lines) > 3 else ""
-        description = lines[4] if len(lines) > 4 else ""
-        category = lines[5] if len(lines) > 5 else ""
-        
-        # 验证数据
-        if not all([url, icon_type, name, description, category]):
-            print("错误: Issue格式不正确")
-            exit(1)
-            
-        if icon_type not in ["FA", "UP"]:
-            print("错误: 图标类型必须是FA或UP")
-            exit(1)
-            
-        valid_categories = ["插件", "教程", "工具", "资源", "社区"]
-        if category not in valid_categories:
-            print(f"错误: 分类必须是{valid_categories}中的一个")
-            exit(1)
-            
-        # 创建新的网站条目
-        new_site = {
-            "name": name,
-            "url": url,
-            "iconType": icon_type,
-            "icon": icon_value if icon_type == "FA" else "fa-external-link-alt",
-            "description": description,
-            "category": category
-        }
-        
-        # 读取现有的数据
         try:
-            with open('websites.json', 'r', encoding='utf-8') as f:
-                websites = json.load(f)
-        except FileNotFoundError:
-            websites = []
+            # 解析YAML格式的Issue内容
+            parsed_body = yaml.safe_load(issue_body)
             
-        # 添加新网站
-        websites.append(new_site)
-        
-        # 保存更新后的数据
-        with open('websites.json', 'w', encoding='utf-8') as f:
-            json.dump(websites, f, ensure_ascii=False, indent=2)
+            # 提取信息
+            url = parsed_body.get('website-url', '').strip()
+            icon_type = parsed_body.get('icon-type', '').strip()
+            icon_value = parsed_body.get('icon-value', '').strip()
+            name = parsed_body.get('website-name', '').strip()
+            description = parsed_body.get('description', '').strip()
+            category = parsed_body.get('category', '').strip()
             
-        print("成功处理网站提交")
+            # 验证数据
+            if not all([url, icon_type, icon_value, name, description, category]):
+                print("错误: 缺少必要字段")
+                exit(1)
+                
+            # 验证URL格式
+            if not url.startswith(('http://', 'https://')):
+                print("错误: URL必须以http://或https://开头")
+                exit(1)
+                
+            if icon_type not in ["FA", "UP"]:
+                print("错误: 图标类型必须是FA或UP")
+                exit(1)
+                
+            valid_categories = ["插件", "教程", "工具", "资源", "社区"]
+            if category not in valid_categories:
+                print(f"错误: 分类必须是{valid_categories}中的一个")
+                exit(1)
+                
+            # 创建新的网站条目
+            new_site = {
+                "name": name,
+                "url": url,
+                "iconType": icon_type,
+                "icon": icon_value,
+                "description": description,
+                "category": category,
+                "submittedBy": os.environ.get('ISSUE_AUTHOR', 'anonymous')
+            }
+            
+            # 读取现有的数据
+            try:
+                with open('websites.json', 'r', encoding='utf-8') as f:
+                    websites = json.load(f)
+            except FileNotFoundError:
+                websites = []
+                
+            # 检查是否已存在相同URL的网站
+            for site in websites:
+                if site['url'] == url:
+                    print("错误: 该URL已存在")
+                    exit(1)
+            
+            # 添加新网站
+            websites.append(new_site)
+            
+            # 保存更新后的数据
+            with open('websites.json', 'w', encoding='utf-8') as f:
+                json.dump(websites, f, ensure_ascii=False, indent=2)
+                
+            print("成功处理网站提交")
+            
+        except yaml.YAMLError as e:
+            print(f"解析YAML时出错: {e}")
+            exit(1)
+        except Exception as e:
+            print(f"处理过程中出错: {e}")
+            exit(1)
         EOF
         
         # 运行处理脚本
         python process_issue.py
       env:
-        ISSUE_BODY: ${{ github.event.issue.body }}
-        ISSUE_NUMBER: ${{ github.event.issue.number }}
+        ISSUE_BODY: ${{ toJSON(github.event.issue.body) }}
+        ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
         
     - name: Commit and push changes
       run: |
-        git config user.name "github-actions"
-        git config user.email "github-actions@github.com"
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
         git add websites.json
         git commit -m "添加新网站（来自Issue #${{ github.event.issue.number }}）"
         git push
@@ -108,5 +128,13 @@ jobs:
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: '✅ 您的提交已成功处理！网站已添加到导航中。'
+            body: '✅ 您的提交已成功处理！网站已添加到导航中。\n\n**提交详情:**\n- 网站名称: ' + context.payload.issue.body.match(/"website-name": "([^"]+)"/)[1] + '\n- 分类: ' + context.payload.issue.body.match(/"category": "([^"]+)"/)[1] + '\n- 处理时间: ' + new Date().toLocaleString('zh-CN')
+          })
+          
+          // 关闭已处理的issue
+          github.rest.issues.update({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            state: 'closed'
           })
